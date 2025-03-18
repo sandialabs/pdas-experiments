@@ -41,8 +41,8 @@ class ParserCommon
 {
 
 protected:
-    pressiolog::LogLevel loglevel_  = pressiolog::LogLevel::none;
-    pressiolog::LogTo logtarget_    = pressiolog::LogTo::file;
+    // pressiolog::LogLevel loglevel_  = pressiolog::LogLevel::none;
+    // pressiolog::LogTo logtarget_    = pressiolog::LogTo::file;
     std::string logfile_            = "log.txt";
     std::string meshDirPathFull_    = "";
     std::string meshDirPathHyper_   = "";
@@ -64,8 +64,8 @@ public:
     auto problemName()          const { return problemName_; }
     auto icFlag()               const { return icFlag_; }
     auto userParams()           const { return userParams_; }
-    auto loglevel()             const { return loglevel_; }
-    auto logtarget()            const { return logtarget_; }
+    // auto loglevel()             const { return loglevel_; }
+    // auto logtarget()            const { return logtarget_; }
     auto logfile()              const { return logfile_; }
 
 private:
@@ -93,23 +93,23 @@ private:
         else throw std::runtime_error("Input: missing " + entry);
 
         // pressio logging, defaults to "off"
-        entry = "loglevel";
-        if (node[entry]) {
-            std::string logstr = node[entry].as<std::string>();
-            if (logstr == "debug") loglevel_ = pressiolog::LogLevel::debug;
-            else if (logstr == "info") loglevel_ = pressiolog::LogLevel::info;
-            else if (logstr == "none") loglevel_ = pressiolog::LogLevel::none;
-            else throw std::runtime_error("Invalid loglevel: " + logstr);
-        }
+        // entry = "loglevel";
+        // if (node[entry]) {
+        //     std::string logstr = node[entry].as<std::string>();
+        //     if (logstr == "debug") loglevel_ = pressiolog::LogLevel::debug;
+        //     else if (logstr == "info") loglevel_ = pressiolog::LogLevel::info;
+        //     else if (logstr == "none") loglevel_ = pressiolog::LogLevel::none;
+        //     else throw std::runtime_error("Invalid loglevel: " + logstr);
+        // }
 
-        entry = "logtarget";
-        if (node[entry]) {
-            std::string logstr = node[entry].as<std::string>();
-            if (logstr == "file") logtarget_ = pressiolog::LogTo::file;
-            else if (logstr == "console") logtarget_ = pressiolog::LogTo::console;
-            else if (logstr == "both") logtarget_ = pressiolog::LogTo::both;
-            else throw std::runtime_error("Invalid logtarget: " + logstr);
-        }
+        // entry = "logtarget";
+        // if (node[entry]) {
+        //     std::string logstr = node[entry].as<std::string>();
+        //     if (logstr == "file") logtarget_ = pressiolog::LogTo::file;
+        //     else if (logstr == "console") logtarget_ = pressiolog::LogTo::console;
+        //     else if (logstr == "both") logtarget_ = pressiolog::LogTo::both;
+        //     else throw std::runtime_error("Invalid logtarget: " + logstr);
+        // }
 
         // logfile
         entry = "logfile";
@@ -702,7 +702,7 @@ public:
         this->parseImpl(node);
     }
 
-    auto probId()           const{ return probId_; }
+    auto probId() const{ return probId_; }
 
 private:
     void parseImpl(YAML::Node & node) {

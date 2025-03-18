@@ -11,16 +11,7 @@
 template<class AppType, class ParserType>
 void run_mono_lspg(AppType & system, ParserType & parser)
 {
-    // if (parser.loglevel() != pressio::log::level::off &&
-    //     parser.logtarget() != pressio::logto::terminal) {
-    //     pressio::log::initialize(parser.logtarget(), parser.logfile());
-    // }
-    // else {
-    //     // to terminal if taget is terminal or no logging
-    //     pressio::log::initialize(pressio::logto::terminal);
-    // }
-    // pressio::log::setVerbosity({parser.loglevel()});
-    PRESSIOLOG_INITIALIZE(parser.loglevel(), parser.logtarget(), parser.logfile());
+    // PRESSIOLOG_INITIALIZE(parser.loglevel(), parser.logtarget(), parser.logfile());
 
     namespace pda    = pressiodemoapps;
     namespace plspg  = pressio::rom::lspg;
@@ -192,7 +183,7 @@ void run_mono_lspg(AppType & system, ParserType & parser)
 
     }
 
-    PRESSIOLOG_FINALIZE();
+    // PRESSIOLOG_FINALIZE();
 
 }
 

@@ -26,26 +26,26 @@ else()
 endif()
 
 # fetch pressio-log
-if(PRESSIO_LOG_INCLUDE_DIR)
-  message("-- Using ${PRESSIO_LOG_INCLUDE_DIR}")
-  include_directories(SYSTEM ${PRESSIO_LOG_INCLUDE_DIR})
+# if(PRESSIO_LOG_INCLUDE_DIR)
+#   message("-- Using ${PRESSIO_LOG_INCLUDE_DIR}")
+#   include_directories(SYSTEM ${PRESSIO_LOG_INCLUDE_DIR})
 
-else()
+# else()
 
-  include(FetchContent)
-  message("-- PRESSIO_LOG_INCLUDE_DIR is not defined, so fetching pressio-log...")
+#   include(FetchContent)
+#   message("-- PRESSIO_LOG_INCLUDE_DIR is not defined, so fetching pressio-log...")
 
-  FetchContent_Declare(
-    pressio-log
-    GIT_REPOSITORY https://github.com/Pressio/pressio-log.git
-    GIT_TAG        main
-    GIT_PROGRESS   TRUE
-    GIT_SHALLOW    TRUE
-  )
+#   FetchContent_Declare(
+#     pressio-log
+#     GIT_REPOSITORY https://github.com/Pressio/pressio-log.git
+#     GIT_TAG        main
+#     GIT_PROGRESS   TRUE
+#     GIT_SHALLOW    TRUE
+#   )
 
-  FetchContent_MakeAvailable(pressio-log)
-  set(PRESSIO_LOG_INCLUDE_DIR ${pressio-log_SOURCE_DIR}/include)
-endif()
+#   FetchContent_MakeAvailable(pressio-log)
+#   set(PRESSIO_LOG_INCLUDE_DIR ${pressio-log_SOURCE_DIR}/include)
+# endif()
 
 #=====================================================================
 # we need c++17
@@ -119,7 +119,7 @@ add_subdirectory(
 # include demoapps, Schwarz
 include_directories(
   ${PRESSIO_OPS_INCLUDE_DIR}
-  ${PRESSIO_LOG_INCLUDE_DIR}
+  # ${PRESSIO_LOG_INCLUDE_DIR}
   ${PDA_SOURCE}/tpls/eigen3
   ${PDA_SOURCE}/include
   ${PRESSIO_SOURCE}/include
@@ -129,7 +129,7 @@ include_directories(
 
 add_compile_definitions(SCHWARZ_SAVE_TEMPDIR)
 link_libraries(stdc++fs)
-add_compile_definitions(PRESSIO_ENABLE_TPL_EIGEN PRESSIO_ENABLE_DEBUG_PRINT PRESSIO_ENABLE_INTERNAL_SPDLOG PRESSIO_ENABLE_LOGGING)
+add_compile_definitions(PRESSIO_ENABLE_TPL_EIGEN PRESSIO_ENABLE_DEBUG_PRINT PRESSIO_ENABLE_INTERNAL_SPDLOG )#PRESSIO_ENABLE_LOGGING)
 
 # serial executable
 add_executable(runner_serial ${CMAKE_CURRENT_SOURCE_DIR}/src/runner.cc)

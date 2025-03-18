@@ -9,16 +9,8 @@
 template<class AppType, class ParserType>
 void run_mono_fom(AppType & system, ParserType & parser)
 {
-    // if (parser.loglevel() != pressio::log::level::off &&
-    //     parser.logtarget() != pressio::logto::terminal) {
-    //     pressio::log::initialize(parser.logtarget(), parser.logfile());
-    // }
-    // else {
-    //     // to terminal if taget is terminal or no logging
-    //     pressio::log::initialize(pressio::logto::terminal);
-    // }
-    // pressio::log::setVerbosity({parser.loglevel()});
-    PRESSIOLOG_INITIALIZE(parser.loglevel(), parser.logtarget(), parser.logfile());
+
+    // PRESSIOLOG_INITIALIZE(parser.loglevel(), parser.logtarget(), parser.logfile());
 
     using app_t = AppType;
     using scalar_t = typename app_t::scalar_type;
@@ -47,8 +39,6 @@ void run_mono_fom(AppType & system, ParserType & parser)
         pressio::linearsolvers::iterative::Bicgstab, jacob_t>;
     lin_solver_t linSolverObj;
     auto NonLinSolver = pressio::create_newton_solver(stepperObj, linSolverObj);
-    // NonLinSolver.setStopCriterion(pressio::nonlinearsolvers::Stop::WhenAbsolutel2NormOfGradientBelowTolerance);
-    // NonLinSolver.setStopTolerance(1e-5);
     NonLinSolver.setStopCriterion(pressio::nonlinearsolvers::Stop::WhenAbsolutel2NormOfCorrectionBelowTolerance);
     NonLinSolver.setStopTolerance(1e-5);
 
@@ -67,7 +57,7 @@ void run_mono_fom(AppType & system, ParserType & parser)
     double secElapsed = static_cast<double>(nsElapsed) * 1e-9;
     Obs_run(secElapsed);
 
-    PRESSIOLOG_FINALIZE();
+    // PRESSIOLOG_FINALIZE();
 
 }
 

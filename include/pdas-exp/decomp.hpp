@@ -10,22 +10,13 @@ template<class AppType, class ParserType>
 void run_decomp(ParserType & parser)
 {
 
-#if defined SCHWARZ_ENABLE_OMP
-#pragma omp barrier
-#pragma omp master
-#endif
-    {
-        // if (parser.loglevel() != pressiolog::LogLevel::none &&
-        //     parser.logtarget() != pressiolog::LogTo::terminal) {
-        //     PRESSIOLOG_INITIALIZE(parser.loglevel(), parser.logtarget(), parser.logfile());
-        // }
-        // else {
-        //     // to terminal if taget is terminal or no logging
-        //     pressio::log::initialize(pressiolog::LogTo::terminal);
-        // }
-        // pressio::log::setVerbosity({parser.loglevel()});
-        PRESSIOLOG_INITIALIZE(parser.loglevel(), parser.logtarget(), parser.logfile());
-    }
+// #if defined SCHWARZ_ENABLE_OMP
+// #pragma omp barrier
+// #pragma omp master
+// #endif
+//     {
+//         PRESSIOLOG_INITIALIZE(parser.loglevel(), parser.logtarget(), parser.logfile());
+//     }
     
 
     namespace pda  = pressiodemoapps;
@@ -148,13 +139,13 @@ void run_decomp(ParserType & parser)
     }
 } // end parallel block
 
-#if defined SCHWARZ_ENABLE_OMP
-#pragma omp barrier
-#pragma omp master
-#endif
-    {
-        PRESSIOLOG_FINALIZE();
-    }
+// #if defined SCHWARZ_ENABLE_OMP
+// #pragma omp barrier
+// #pragma omp master
+// #endif
+//     {
+//         PRESSIOLOG_FINALIZE();
+//     }
 }
 
 #endif
