@@ -1,0 +1,89 @@
+
+hotrun: True
+recalc: True
+
+runexec_serial: "<...>/pdas-experiments/build/runner_serial"
+runexec_omp:    "<...>/pdas-experiments/build/runner_omp"
+pdaroot:        "<...>/pressio-demoapps"
+pschwarzroot:   "<...>/pressio-schwarz"
+caseroot:       "<...>/pdas-experiments/cases/jcam-25/2d_burgers" 
+
+case:
+  equations: "2d_burgers"
+  problem: "BurgersOutflow"
+  ic_flag: 1
+  flux_order: 1
+  time_scheme: "BDF1"
+  tf: 7.5
+  dt: 0.05
+
+mesh:
+  nx: 300
+  ny: 300
+  xbounds: [-1.0, 1.0]
+  ybounds: [-1.0, 1.0]
+
+phys_param:
+    name: "diffusion"
+    vals: [0.0001, 0.000135, 0.000175, 0.00025, 0.000325, 0.000425, 0.00055, 0.00075, 0.001]
+
+schwarz:
+  domx: 2
+  domy: 2
+  isadditive: True
+  conv_step_max: 50
+
+basis:
+  name: "diffusion_0p0001_to_0p001_log"
+  param_vals: [0.0001, 0.000175, 0.000325, 0.00055, 0.001]
+  center_method: "init_cond"
+  norm_method: "one"
+  nmodes_max: 300
+  idx_start: 0
+  idx_end: null
+  idx_skip: 1
+
+fom:
+  sampfreq: 1
+
+prom:
+  rom_algo: "LSPG"
+  nmodes_trial: [100, 150, 200, 250, 300]
+  sampfreq: 1
+
+hprom:
+  rom_algo: "LSPG"
+  sampalgo: "random"
+  qdeim: True
+  gpod_weigher: "identity"
+  nmodes_trial: [150]
+  seed_phys: False
+  samp_phys: False
+  samp_percs: [0.01, 0.015, 0.025, 0.0375, 0.05, 0.0875, 0.1]
+  sampfreq: 1
+
+fom_decomp:
+  overlaps: [0, 10, 20, 30]
+  sampfreq: 6
+
+prom_decomp:
+  rom_algo: "LSPG"
+  overlaps: [0, 10, 20, 30]
+  nmodes_trial: [100, 150, 200, 250, 300]
+  sampfreq: 1
+
+hprom_decomp:
+  rom_algo: "LSPGHyper"
+  sampalgo: "random"
+  qdeim: True
+  gpod_weigher: "identity"
+  nmodes_trial: [150]
+  seed_phys: False
+  samp_phys: False
+  seed_dom: True
+  seed_dom_rates: [1, 2, 3]
+  samp_dom: False
+  overlaps: [0]
+  samp_percs: [0.01, 0.015, 0.025, 0.0375, 0.05, 0.0875, 0.1]
+  sampfreq: 1
+

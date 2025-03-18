@@ -4,7 +4,7 @@ import argparse
 
 import yaml
 
-from pdas.prom_utils import gen_pod_bases
+from pschwarz.prom_utils import gen_pod_bases
 from pdas_exp.defaults import check_params, get_params_combo, nvars
 from pdas_exp.utils import check_meshdir, mkdir
 

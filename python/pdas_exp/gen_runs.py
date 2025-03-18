@@ -56,8 +56,8 @@ def gen_runs(
 
     # ----- START CHECKS -----
 
-    assert loglevel in ["debug", "info", "off"]
-    assert logtarget in ["file", "terminal", "both"]
+    assert loglevel in ["debug", "info", "none"]
+    assert logtarget in ["file", "console", "both"]
     assert scheme in ["BDF1", "BDF2"]
     assert tf > 0.0
     assert sampfreq >= 1

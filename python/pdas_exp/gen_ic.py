@@ -2,7 +2,7 @@ import os
 
 import numpy as np
 
-from pdas.data_utils import load_meshes, decompose_domain_data, write_to_binary
+from pschwarz.data_utils import load_meshes, decompose_domain_data, write_to_binary
 from pdas_exp.defaults import check_params, get_params_combo, nvars
 from pdas_exp.utils import mkdir
 
