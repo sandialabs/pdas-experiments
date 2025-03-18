@@ -2,11 +2,11 @@
 hotrun: True
 recalc: False
 
-runexec_serial: "/home/crwentl/research/code/pressio-proj/pdas-experiments/build/runner_serial"
-runexec_omp:    "/home/crwentl/research/code/pressio-proj/pdas-experiments/build/runner_omp"
-pdaroot:        "/home/crwentl/research/code/pressio-proj/pressio-demoapps"
-pschwarzroot:   "/home/crwentl/research/code/pressio-proj/pressio-schwarz"
-caseroot:       "/home/crwentl/research/code/pressio-proj/pdas-experiments/cases/jcam-25/2d_euler" 
+runexec_serial: "<...>/pdas-experiments/build/runner_serial"
+runexec_omp:    "<...>/pdas-experiments/build/runner_omp"
+pdaroot:        "<...>/pressio-demoapps"
+pschwarzroot:   "<...>/pressio-schwarz"
+caseroot:       "<...>/pdas-experiments/cases/jcam-25/2d_euler" 
 
 case:
   equations: "2d_euler"
