@@ -1,0 +1,89 @@
+
+hotrun: True
+recalc: False
+
+runexec_serial: "/home/crwentl/research/code/pressio-proj/pdas-experiments/build/runner_serial"
+runexec_omp:    "/home/crwentl/research/code/pressio-proj/pdas-experiments/build/runner_omp"
+pdaroot:        "/home/crwentl/research/code/pressio-proj/pressio-demoapps"
+pschwarzroot:   "/home/crwentl/research/code/pressio-proj/pressio-schwarz"
+caseroot:       "/home/crwentl/research/code/pressio-proj/pdas-experiments/cases/jcam-25/2d_swe" 
+
+case:
+  equations: "2d_swe"
+  problem: "SlipWall"
+  ic_flag: 1
+  flux_order: 1
+  time_scheme: "BDF1"
+  tf: 10.0
+  dt: 0.01
+
+mesh:
+  nx: 300
+  ny: 300
+  xbounds: [-5.0, 5.0]
+  ybounds: [-5.0, 5.0]
+
+phys_param:
+    name: "coriolis"
+    vals: [-4.0, -3.5, -3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0]
+
+schwarz:
+  domx: 2
+  domy: 2
+  isadditive: True
+  conv_step_max: 50
+
+basis:
+  name: "coriolis_0p0_to_n4p0"
+  param_vals: [-4.0, -3.0, -2.0, -1.0, 0.0]
+  center_method: "init_cond"
+  norm_method: "one"
+  nmodes_max: 300
+  idx_start: 0
+  idx_end: null
+  idx_skip: 1
+
+fom:
+  sampfreq: 1
+
+prom:
+  rom_algo: "LSPG"
+  nmodes_trial: [20, 40, 60, 80, 100]
+  sampfreq: 1
+
+hprom:
+  rom_algo: "LSPG"
+  sampalgo: "random"
+  qdeim: False
+  gpod_weigher: "identity"
+  nmodes_trial: [80]
+  seed_phys: False
+  samp_phys: False
+  samp_percs: [0.0025, 0.00375, 0.005, 0.00875, 0.01, 0.015, 0.025, 0.0375, 0.05]
+  sampfreq: 1
+
+fom_decomp:
+  overlaps: [0, 10, 20, 30]
+  sampfreq: 20
+
+prom_decomp:
+  rom_algo: "LSPG"
+  overlaps: [0, 10, 20, 30]
+  nmodes_trial: [20, 40, 60, 80, 100]
+  sampfreq: 1
+
+hprom_decomp:
+  rom_algo: "LSPGHyper"
+  sampalgo: "random"
+  qdeim: False
+  gpod_weigher: "identity"
+  nmodes_trial: [80]
+  seed_phys: False
+  samp_phys: False
+  seed_dom: True
+  seed_dom_rates: [5, 10, 30]
+  samp_dom: False
+  overlaps: [0]
+  samp_percs: [0.005, 0.00875, 0.01, 0.015, 0.025, 0.0375, 0.05]
+  sampfreq: 1
+
