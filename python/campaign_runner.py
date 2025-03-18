@@ -23,8 +23,8 @@ def main(inputs):
     assert os.path.isfile(runexec_omp)
     pdaroot   = catchinput(inputs, "pdaroot", default_type=str)
     assert os.path.isdir(pdaroot)
-    pdasroot  = catchinput(inputs, "pdasroot", default_type=str)
-    assert os.path.isdir(pdasroot)
+    pschwarzroot  = catchinput(inputs, "pschwarzroot", default_type=str)
+    assert os.path.isdir(pschwarzroot)
     caseroot   = catchinput(inputs, "caseroot", default_type=str)
     assert os.path.isdir(caseroot)
 
@@ -87,7 +87,7 @@ def main(inputs):
     # meshing
     mesh_driver = os.path.join(pdaroot, "meshing_scripts", "create_full_mesh.py")
     assert os.path.isfile(mesh_driver)
-    decomp_driver = os.path.join(pdasroot, "meshing_scripts", "create_decomp_meshes.py")
+    decomp_driver = os.path.join(pschwarzroot, "meshing_scripts", "create_decomp_meshes.py")
     assert os.path.isfile(decomp_driver)
     sample_driver = os.path.join(pdaroot, "meshing_scripts", "create_sample_mesh.py")
     assert os.path.isfile(sample_driver)
