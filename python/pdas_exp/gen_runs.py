@@ -223,7 +223,7 @@ def gen_runs(
         # parameter directory
         paramdir = ""
         for param_idx, param in enumerate(params_names_list):
-            paramdir += param + str(run_list[param_idx]) + "_"
+            paramdir += f"{param}{run_list[param_idx]}_"
         paramdir = paramdir[:-1]
         rundir = os.path.join(rundir, paramdir)
 

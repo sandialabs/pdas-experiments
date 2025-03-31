@@ -46,23 +46,13 @@ def main(inputs):
     ybounds = catchinput(inputs_mesh, "ybounds", default_type=list)
 
     # parameterizations
-    ic_parameterized = "ic_param" in inputs
     ic_params = {}
-    if ic_parameterized:
-        inputs_ic_param = inputs["ic_param"]
-        ic_param_name = catchinput(inputs_ic_param, "name", default_type=str)
-        ic_param_vals = catchinput(inputs_ic_param, "vals", default_type=list)
-        ic_params = {ic_param_name: ic_param_vals}
+    if "ic_params" in inputs:
+        ic_params = inputs["ic_params"]
 
-    phys_parameterized = "phys_param" in inputs
     phys_params = {}
-    if phys_parameterized:
-        inputs_phys_param = inputs["phys_param"]
-        phys_param_name = catchinput(inputs_phys_param, "name", default_type=str)
-        phys_param_vals = catchinput(inputs_phys_param, "vals", default_type=list)
-        phys_params = {phys_param_name: phys_param_vals}
-
-    assert not (ic_parameterized and phys_parameterized)
+    if "phys_params" in inputs:
+        phys_params = inputs["phys_params"]
 
     # run flags and inputs
     run_fom = "fom" in inputs
@@ -280,12 +270,17 @@ def main(inputs):
     basisdir_trial = os.path.join(basisroot, basis_name)
     mkdir(basisdir_trial)
 
-    ic_params_basis = {}
-    if len(ic_params) != 0:
-        ic_params_basis = {ic_param_name: basis_vals}
-    phys_params_basis = {}
-    if len(phys_params) != 0:
-        phys_params_basis = {phys_param_name: basis_vals}
+    ic_params_basis = ic_params.copy()
+    phys_params_basis = phys_params.copy()
+    param_vals = catchinput(input_basis, "param_vals", default_type=list)
+    if "ic_param_name" in input_basis:
+        param_name = input_basis["ic_param_name"]
+        ic_params_basis[param_name] = param_vals
+    elif "phys_param_name" in input_basis:
+        param_name = input_basis["phys_param_name"]
+        phys_params_basis[param_name] = param_vals
+    else:
+        raise ValueError("Did not find phys_param_name or ic_param_name in basis inputs")
 
     # monolithic bases
     if run_prom or run_hprom:
@@ -457,20 +452,23 @@ def main(inputs):
         mkdir(meshroot_samp)
 
         if qdeim or (sampalgo in ["eigenvec", "gnat"]):
-            raise ValueError("Eigenvec not implemented yet")
-            # add too meshroot_samp
+            # TODO: may want to change this at some point
+            basis_dir_greedy = os.path.join(basisdir_trial, f"{nx}x{ny}", "1x1", stencildir)
+            nmodes_greedy = catchinput(inputs_hprom, "nmodes_greedy")
         else:
             basis_dir_greedy = None
             nmodes_greedy = None
-            meshroot_samp += "/"
 
         for samp_perc in samp_percs:
-            # generate sample mesh
-            outdir = meshroot_samp + f"samp_{samp_perc}"
+            outdir = ""
+            if qdeim or (sampalgo in ["eigenvec", "gnat"]):
+                outdir += f"modes_{nmodes_greedy}_"
+            outdir += f"samp_{samp_perc}"
             if qdeim:
                 outdir += "_qdeim"
             if seed_phys:
                 outdir += f"_phys{seed_phys_rate}"
+            outdir = os.path.join(meshroot_samp, outdir)
 
             gen_sample_mesh(
                 sampalgo,
@@ -582,23 +580,33 @@ def main(inputs):
             mkdir(meshroot_samp)
 
             if qdeim or (sampalgo in ["eigenvec", "gnat"]):
-                raise ValueError("Eigenvec not implemented yet")
-                # add too meshroot_samp
+                # TODO: may want to change this at some point
+                basis_dir_greedy = os.path.join(
+                    basisdir_trial,
+                    f"{nx}x{ny}",
+                    f"{domx}x{domy}",
+                    f"overlap{overlap}",
+                    stencildir,
+                )
+                nmodes_greedy = catchinput(inputs_hprom_decomp, "nmodes_greedy")
             else:
                 basis_dir_greedy = None
                 nmodes_greedy = None
-                meshroot_samp += "/"
 
             for samp_perc in samp_percs:
                 for seed_dom_rate in seed_dom_rates:
                     # generate sample mesh
-                    outdir = meshroot_samp + f"samp_{samp_perc}"
+                    outdir = ""
+                    if qdeim or (sampalgo in ["eigenvec", "gnat"]):
+                        outdir += f"modes_{nmodes_greedy}_"
+                    outdir += f"samp_{samp_perc}"
                     if qdeim:
                         outdir += "_qdeim"
                     if seed_phys:
                         outdir += f"_phys{seed_phys_rate}"
                     if seed_dom:
                         outdir += f"_dom{seed_dom_rate}"
+                    outdir = os.path.join(meshroot_samp, outdir)
                     mkdir(outdir)
 
                     gen_sample_mesh(

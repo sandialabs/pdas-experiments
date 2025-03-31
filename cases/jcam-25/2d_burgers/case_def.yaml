@@ -23,9 +23,13 @@ mesh:
   xbounds: [-1.0, 1.0]
   ybounds: [-1.0, 1.0]
 
-phys_param:
-    name: "diffusion"
-    vals: [0.0001, 0.000135, 0.000175, 0.00025, 0.000325, 0.000425, 0.00055, 0.00075, 0.001]
+phys_params:
+    diffusion: [0.0001, 0.000135, 0.000175, 0.00025, 0.000325, 0.000425, 0.00055, 0.00075, 0.001]
+
+ic_params:
+    pulseSpread: [0.075]
+    pulseX: [-0.5]
+    pulseY: [-0.4]
 
 schwarz:
   domx: 2
@@ -35,6 +39,7 @@ schwarz:
 
 basis:
   name: "diffusion_0p0001_to_0p001_log"
+  phys_param_name: "diffusion"
   param_vals: [0.0001, 0.000175, 0.000325, 0.00055, 0.001]
   center_method: "init_cond"
   norm_method: "one"
@@ -55,6 +60,7 @@ hprom:
   rom_algo: "LSPG"
   sampalgo: "random"
   qdeim: True
+  nmodes_greedy: 200
   gpod_weigher: "identity"
   nmodes_trial: [150]
   seed_phys: False
@@ -76,14 +82,15 @@ hprom_decomp:
   rom_algo: "LSPGHyper"
   sampalgo: "random"
   qdeim: True
+  nmodes_greedy: 200
   gpod_weigher: "identity"
   nmodes_trial: [150]
   seed_phys: False
   samp_phys: False
   seed_dom: True
   seed_dom_rates: [1, 2, 3]
+  samp_percs: [0.015, 0.025, 0.0375, 0.05, 0.0875, 0.1]
   samp_dom: False
   overlaps: [0]
-  samp_percs: [0.01, 0.015, 0.025, 0.0375, 0.05, 0.0875, 0.1]
   sampfreq: 1
 

@@ -1,6 +1,6 @@
 
 hotrun: True
-recalc: False
+recalc: True
 
 runexec_serial: "<...>/pdas-experiments/build/runner_serial"
 runexec_omp:    "<...>/pdas-experiments/build/runner_omp"
@@ -23,9 +23,8 @@ mesh:
   xbounds: [0.0, 1.0]
   ybounds: [0.0, 1.0]
 
-ic_param:
-    name: "riemannTopRightPressure"
-    vals: [0.5, 0.625, 0.75, 0.875, 1.0, 1.125, 1.25, 1.375, 1.5]
+ic_params:
+  "riemannTopRightPressure": [0.5, 0.625, 0.75, 0.875, 1.0, 1.125, 1.25, 1.375, 1.5]
 
 schwarz:
   domx: 2
@@ -38,6 +37,7 @@ rom_from_ic:
 
 basis:
   name: "topRightPress_0p5_to_1p5"
+  ic_param_name: "riemannTopRightPressure"
   param_vals: [0.5, 0.75, 1.0, 1.25, 1.5]
   center_method: "init_cond"
   norm_method: "one"
@@ -85,8 +85,8 @@ hprom_decomp:
   samp_phys: False
   seed_dom: True
   seed_dom_rates: [1, 2, 3]
+  samp_percs: [0.015, 0.025, 0.0375, 0.05, 0.0875, 0.1]
   samp_dom: False
   overlaps: [0]
-  samp_percs: [0.015, 0.025, 0.0375, 0.05, 0.0875, 0.1]
   sampfreq: 1
 

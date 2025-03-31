@@ -1,6 +1,6 @@
 
 hotrun: True
-recalc: False
+recalc: True
 
 runexec_serial: "<...>/pdas-experiments/build/runner_serial"
 runexec_omp:    "<...>/pdas-experiments/build/runner_omp"
@@ -23,9 +23,8 @@ mesh:
   xbounds: [-5.0, 5.0]
   ybounds: [-5.0, 5.0]
 
-phys_param:
-    name: "coriolis"
-    vals: [-4.0, -3.5, -3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0]
+phys_params:
+    "coriolis": [-4.0, -3.5, -3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0.0]
 
 schwarz:
   domx: 2
@@ -35,6 +34,7 @@ schwarz:
 
 basis:
   name: "coriolis_0p0_to_n4p0"
+  phys_param_name: "coriolis"
   param_vals: [-4.0, -3.0, -2.0, -1.0, 0.0]
   center_method: "init_cond"
   norm_method: "one"
@@ -82,8 +82,8 @@ hprom_decomp:
   samp_phys: False
   seed_dom: True
   seed_dom_rates: [5, 10, 30]
+  samp_percs: [0.00375, 0.005, 0.00875, 0.01, 0.015, 0.025, 0.0375, 0.05, 0.0875, 0.1]
   samp_dom: False
   overlaps: [0]
-  samp_percs: [0.005, 0.00875, 0.01, 0.015, 0.025, 0.0375, 0.05]
   sampfreq: 1
 
