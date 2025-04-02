@@ -26,26 +26,26 @@ else()
 endif()
 
 # fetch pressio-log
-# if(PRESSIO_LOG_INCLUDE_DIR)
-#   message("-- Using ${PRESSIO_LOG_INCLUDE_DIR}")
-#   include_directories(SYSTEM ${PRESSIO_LOG_INCLUDE_DIR})
+if(PRESSIO_LOG_INCLUDE_DIR)
+  message("-- Using ${PRESSIO_LOG_INCLUDE_DIR}")
+  include_directories(SYSTEM ${PRESSIO_LOG_INCLUDE_DIR})
 
-# else()
+else()
 
-#   include(FetchContent)
-#   message("-- PRESSIO_LOG_INCLUDE_DIR is not defined, so fetching pressio-log...")
+  include(FetchContent)
+  message("-- PRESSIO_LOG_INCLUDE_DIR is not defined, so fetching pressio-log...")
 
-#   FetchContent_Declare(
-#     pressio-log
-#     GIT_REPOSITORY https://github.com/Pressio/pressio-log.git
-#     GIT_TAG        main
-#     GIT_PROGRESS   TRUE
-#     GIT_SHALLOW    TRUE
-#   )
+  FetchContent_Declare(
+    pressio-log
+    GIT_REPOSITORY https://github.com/Pressio/pressio-log.git
+    GIT_TAG        main
+    GIT_PROGRESS   TRUE
+    GIT_SHALLOW    TRUE
+  )
 
-#   FetchContent_MakeAvailable(pressio-log)
-#   set(PRESSIO_LOG_INCLUDE_DIR ${pressio-log_SOURCE_DIR}/include)
-# endif()
+  FetchContent_MakeAvailable(pressio-log)
+  set(PRESSIO_LOG_INCLUDE_DIR ${pressio-log_SOURCE_DIR}/include)
+endif()
 
 #=====================================================================
 # we need c++17
@@ -116,10 +116,9 @@ add_subdirectory(
   ${CMAKE_CURRENT_SOURCE_DIR}/tpls/yaml-cpp-0.7.0
   ${CMAKE_CURRENT_BINARY_DIR}/yamlcpp)
 
-# include demoapps, Schwarz
 include_directories(
   ${PRESSIO_OPS_INCLUDE_DIR}
-  # ${PRESSIO_LOG_INCLUDE_DIR}
+  ${PRESSIO_LOG_INCLUDE_DIR}
   ${PDA_SOURCE}/tpls/eigen3
   ${PDA_SOURCE}/include
   ${PRESSIO_SOURCE}/include
@@ -129,11 +128,11 @@ include_directories(
 
 add_compile_definitions(SCHWARZ_SAVE_TEMPDIR)
 link_libraries(stdc++fs)
-add_compile_definitions(PRESSIO_ENABLE_TPL_EIGEN PRESSIO_ENABLE_DEBUG_PRINT PRESSIO_ENABLE_INTERNAL_SPDLOG )#PRESSIO_ENABLE_LOGGING)
+add_compile_definitions(PRESSIO_ENABLE_TPL_EIGEN PRESSIO_ENABLE_DEBUG_PRINT PRESSIO_ENABLE_LOGGING)
 
 # serial executable
 add_executable(runner_serial ${CMAKE_CURRENT_SOURCE_DIR}/src/runner.cc)
-target_link_libraries(runner_serial PRIVATE yaml-cpp)
+target_link_libraries(runner_serial PRIVATE yaml-cpp pthread)
 
 # parallel executable
 add_executable(runner_omp ${CMAKE_CURRENT_SOURCE_DIR}/src/runner.cc)
@@ -142,4 +141,9 @@ find_package(OpenMP)
 target_compile_definitions(runner_omp PRIVATE SCHWARZ_ENABLE_OMP)
 target_link_libraries(runner_omp PRIVATE OpenMP::OpenMP_CXX pthread)
 target_compile_options(runner_omp PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-march=native>)
+
+# tests
+# set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+# enable_testing()
+# add_subdirectory(tests)
 

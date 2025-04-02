@@ -10,14 +10,13 @@ template<class AppType, class ParserType>
 void run_decomp(ParserType & parser)
 {
 
-// #if defined SCHWARZ_ENABLE_OMP
-// #pragma omp barrier
-// #pragma omp master
-// #endif
-//     {
-//         PRESSIOLOG_INITIALIZE(parser.loglevel(), parser.logtarget(), parser.logfile());
-//     }
-    
+#if defined SCHWARZ_ENABLE_OMP
+#pragma omp barrier
+#pragma omp master
+#endif
+    {
+        PRESSIOLOG_INITIALIZE(parser.loglevel(), parser.logtarget(), parser.logfile());
+    }
 
     namespace pda  = pressiodemoapps;
     namespace pode = pressio::ode;
@@ -139,13 +138,14 @@ void run_decomp(ParserType & parser)
     }
 } // end parallel block
 
-// #if defined SCHWARZ_ENABLE_OMP
-// #pragma omp barrier
-// #pragma omp master
-// #endif
-//     {
-//         PRESSIOLOG_FINALIZE();
-//     }
+#if defined SCHWARZ_ENABLE_OMP
+#pragma omp barrier
+#pragma omp master
+#endif
+    {
+        PRESSIOLOG_FINALIZE();
+    }
+
 }
 
 #endif

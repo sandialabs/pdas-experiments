@@ -9,8 +9,7 @@
 template<class AppType, class ParserType>
 void run_mono_fom(AppType & system, ParserType & parser)
 {
-
-    // PRESSIOLOG_INITIALIZE(parser.loglevel(), parser.logtarget(), parser.logfile());
+    PRESSIOLOG_INITIALIZE(parser.loglevel(), parser.logtarget(), parser.logfile());
 
     using app_t = AppType;
     using scalar_t = typename app_t::scalar_type;
@@ -57,7 +56,7 @@ void run_mono_fom(AppType & system, ParserType & parser)
     double secElapsed = static_cast<double>(nsElapsed) * 1e-9;
     Obs_run(secElapsed);
 
-    // PRESSIOLOG_FINALIZE();
+    PRESSIOLOG_FINALIZE();
 
 }
 

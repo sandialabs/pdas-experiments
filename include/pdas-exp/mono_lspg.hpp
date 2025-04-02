@@ -11,7 +11,7 @@
 template<class AppType, class ParserType>
 void run_mono_lspg(AppType & system, ParserType & parser)
 {
-    // PRESSIOLOG_INITIALIZE(parser.loglevel(), parser.logtarget(), parser.logfile());
+    PRESSIOLOG_INITIALIZE(parser.loglevel(), parser.logtarget(), parser.logfile());
 
     namespace pda    = pressiodemoapps;
     namespace plspg  = pressio::rom::lspg;
@@ -183,7 +183,7 @@ void run_mono_lspg(AppType & system, ParserType & parser)
 
     }
 
-    // PRESSIOLOG_FINALIZE();
+    PRESSIOLOG_FINALIZE();
 
 }
 
