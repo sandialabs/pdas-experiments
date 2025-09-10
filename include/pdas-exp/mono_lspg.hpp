@@ -15,14 +15,14 @@ void run_mono_lspg(AppType & system, ParserType & parser)
 
     namespace pda    = pressiodemoapps;
     namespace plspg  = pressio::rom::lspg;
-    namespace pnlins = pressio::nonlinearsolvers;
+    namespace pnlins = pressio::nlsol;
 
     using app_t              = AppType;
     using scalar_type        = typename app_t::scalar_type;
     using reduced_state_type = Eigen::Matrix<scalar_type, Eigen::Dynamic, 1>;
     using hessian_t          = Eigen::Matrix<scalar_type, -1, -1>;
-    using solver_tag         = pressio::linearsolvers::direct::HouseholderQR;
-    using linear_solver_t    = pressio::linearsolvers::Solver<solver_tag, hessian_t>;
+    using solver_tag         = pressio::linsol::direct::HouseholderQR;
+    using linear_solver_t    = pressio::linsol::Solver<solver_tag, hessian_t>;
     linear_solver_t linSolverObj;
 
     const auto numDofsPerCell = system.numDofPerCell();
@@ -76,20 +76,16 @@ void run_mono_lspg(AppType & system, ParserType & parser)
 
         auto problem = pressio::rom::lspg::create_unsteady_problem(
             parser.odeScheme(), trialSpace, system);
-        auto stepperObj = problem.lspgStepper();
 
-        auto NonLinSolver = pressio::create_gauss_newton_solver(stepperObj, linSolverObj);
+        auto NonLinSolver = pnlins::create_gauss_newton_solver(problem, linSolverObj);
         // TODO: generalize this
         NonLinSolver.setStopCriterion(pnlins::Stop::WhenAbsolutel2NormOfCorrectionBelowTolerance);
         NonLinSolver.setStopTolerance(1e-5);
 
         // execute
+        auto policy = pressio::ode::steps_fixed_dt(0., pressio::ode::StepCount(parser.numSteps()), parser.timeStepSize());
         auto runtimeStart = std::chrono::high_resolution_clock::now();
-        pressio::ode::advance_n_steps(
-            stepperObj, reducedState, startTime,
-            parser.timeStepSize(),
-            pressio::ode::StepCount(parser.numSteps()),
-            Obs, NonLinSolver);
+        pressio::ode::advance(problem, reducedState, policy, NonLinSolver, Obs);
         auto runtimeEnd = std::chrono::high_resolution_clock::now();
         auto nsElapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(runtimeEnd - runtimeStart).count();
         double secElapsed = static_cast<double>(nsElapsed) * 1e-9;
@@ -153,10 +149,9 @@ void run_mono_lspg(AppType & system, ParserType & parser)
 
         // define ROM problem
         auto problem = plspg::create_unsteady_problem(parser.odeScheme(), trialSpaceHyp, systemHyp, hrUpdater);
-        auto stepperObj = problem.lspgStepper();
 
         // nonlinear solver
-        pressio::nonlinearsolvers::impl::CompactWeightedGaussNewtonNormalEqTag tag;
+        pnlins::impl::CompactWeightedGaussNewtonNormalEqTag tag;
         auto weigher = pschwarz::Weigher<scalar_type>(
             parser.gpodWeigherType(),
             parser.gpodBasisFile(),
@@ -164,18 +159,15 @@ void run_mono_lspg(AppType & system, ParserType & parser)
             parser.gpodModeCount(),
             numDofsPerCell
         );
-        auto NonLinSolver = pressio::create_gauss_newton_solver(stepperObj, linSolverObj, weigher, tag);
+        auto NonLinSolver = pnlins::create_gauss_newton_solver(problem, linSolverObj, weigher, tag);
         // TODO: generalize this
         NonLinSolver.setStopCriterion(pnlins::Stop::WhenAbsolutel2NormOfCorrectionBelowTolerance);
         NonLinSolver.setStopTolerance(1e-5);
 
         // execute
+        auto policy = pressio::ode::steps_fixed_dt(0., pressio::ode::StepCount(parser.numSteps()), parser.timeStepSize());
         auto runtimeStart = std::chrono::high_resolution_clock::now();
-        pressio::ode::advance_n_steps(
-            stepperObj, reducedState, startTime,
-            parser.timeStepSize(),
-            pressio::ode::StepCount(parser.numSteps()),
-            Obs, NonLinSolver);
+        pressio::ode::advance(problem, reducedState, policy, NonLinSolver, Obs);
         auto runtimeEnd = std::chrono::high_resolution_clock::now();
         auto nsElapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(runtimeEnd - runtimeStart).count();
         double secElapsed = static_cast<double>(nsElapsed) * 1e-9;

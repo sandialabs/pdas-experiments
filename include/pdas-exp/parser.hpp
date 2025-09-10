@@ -5,7 +5,7 @@
 
 #include <string>
 
-#include "pressio/ode_steppers_implicit.hpp"
+#include "pressio/ode_steppers.hpp"
 
 #include "yaml-cpp/parser.h"
 #include "yaml-cpp/yaml.h"

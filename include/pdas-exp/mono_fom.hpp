@@ -1,7 +1,7 @@
 #ifndef PDAS_EXPERIMENTS_FOM_HPP_
 #define PDAS_EXPERIMENTS_FOM_HPP_
 
-#include "pressio/ode_steppers_implicit.hpp"
+#include "pressio/ode_steppers.hpp"
 #include "pressio/ode_advancers.hpp"
 #include "observer.hpp"
 #include <chrono>
@@ -34,23 +34,20 @@ void run_mono_fom(AppType & system, ParserType & parser)
     const auto odeScheme = parser.odeScheme();
     auto stepperObj = pressio::ode::create_implicit_stepper(odeScheme, system);
 
-    using lin_solver_t = pressio::linearsolvers::Solver<
-        pressio::linearsolvers::iterative::Bicgstab, jacob_t>;
+    using lin_solver_t = pressio::linsol::Solver<
+        pressio::linsol::iterative::Bicgstab, jacob_t>;
     lin_solver_t linSolverObj;
-    auto NonLinSolver = pressio::create_newton_solver(stepperObj, linSolverObj);
-    NonLinSolver.setStopCriterion(pressio::nonlinearsolvers::Stop::WhenAbsolutel2NormOfCorrectionBelowTolerance);
+    auto NonLinSolver = pressio::nlsol::create_newton_solver(stepperObj, linSolverObj);
+    NonLinSolver.setStopCriterion(pressio::nlsol::Stop::WhenAbsolutel2NormOfCorrectionBelowTolerance);
     NonLinSolver.setStopTolerance(1e-5);
 
     StateObserver Obs(parser.stateSamplingFreq());
     RuntimeObserver Obs_run("runtime.bin");
 
+    auto policy = pressio::ode::steps_fixed_dt(0., pressio::ode::StepCount(parser.numSteps()), parser.timeStepSize());
     const auto startTime = static_cast<scalar_t>(0.0);
     auto runtimeStart = std::chrono::high_resolution_clock::now();
-    pressio::ode::advance_n_steps(
-        stepperObj, state, startTime,
-        parser.timeStepSize(),
-        pressio::ode::StepCount(parser.numSteps()),
-        Obs, NonLinSolver);
+    pressio::ode::advance(stepperObj, state, policy, NonLinSolver, Obs);
     auto runtimeEnd = std::chrono::high_resolution_clock::now();
     auto nsElapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(runtimeEnd - runtimeStart).count();
     double secElapsed = static_cast<double>(nsElapsed) * 1e-9;

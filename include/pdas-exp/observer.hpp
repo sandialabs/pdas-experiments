@@ -23,7 +23,7 @@ public:
     std::enable_if_t< pressio::is_vector_eigen<ObservableType>::value >
     operator()(pressio::ode::StepCount step,
             const TimeType /*timeIn*/,
-            const ObservableType & state)
+            const ObservableType & state) const
     {
         if (step.get() % sampleFreq_ == 0) {
             const std::size_t ext = state.size()*sizeof(typename ObservableType::Scalar);
@@ -32,7 +32,7 @@ public:
     }
 
 private:
-    std::ofstream myfile_;
+    mutable std::ofstream myfile_;
     int sampleFreq_ = {};
 };
 
